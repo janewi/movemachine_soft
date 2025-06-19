@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "led.h"
 #include "includes.h"
+
 /************************************************
  ALIENTEK 战舰STM32F103开发板 实验51
  UOSII实验1-1-任务调度-HAL库版本
@@ -23,25 +24,25 @@ OS_STK START_TASK_STK[START_STK_SIZE];
 //任务函数
 void start_task(void *pdata);
 
-//LED0任务
+//电机驱动任务
 //设置任务优先级
-#define LED0_TASK_PRIO			7
+#define MOTOR_TASK_PRIO			7
 //设置任务堆栈大小
-#define LED0_STK_SIZE			128
+#define MOTOR_STK_SIZE			128
 //任务堆栈
-OS_STK LED0_TASK_STK[LED0_STK_SIZE];
+OS_STK MOTOR_TASK_STK[MOTOR_STK_SIZE];
 //任务函数
-void led0_task(void *pdata);
+void motordrive_task(void *pdata);
 
-//LED1任务
+//遥控开关任务
 //设置任务优先级
-#define LED1_TASK_PRIO			6
+#define REMOTE_TASK_PRIO			6
 //设置任务堆栈大小
-#define LED1_STK_SIZE			128
+#define REMOTE_STK_SIZE			128
 //任务堆栈
-OS_STK LED1_TASK_STK[LED1_STK_SIZE];
+OS_STK REMOTE_TASK_STK[REMOTE_STK_SIZE];
 //任务函数
-void led1_task(void *pdata);
+void remotectrl_task(void *pdata);
 
 int main(void)
 { 
@@ -49,7 +50,9 @@ int main(void)
     Stm32_Clock_Init(RCC_PLL_MUL9);   	//设置时钟,72M
 	delay_init(72);               		//初始化延时函数
 	LED_Init();							//初始化LED	
+	uart_init(115200);					//初始化串口
 
+	printf("uart init ok\r\n");
 	OSInit();                       	//UCOS初始化
     OSTaskCreateExt((void(*)(void*) )start_task,                //任务函数
                     (void*          )0,                         //传递给任务函数的参数
@@ -72,23 +75,23 @@ void start_task(void *pdata)
 	
 	OS_ENTER_CRITICAL();  //进入临界区(关闭中断)
     //LED0任务
-    OSTaskCreateExt((void(*)(void*) )led0_task,                 
+    OSTaskCreateExt((void(*)(void*) )motordrive_task,                 
                     (void*          )0,
-                    (OS_STK*        )&LED0_TASK_STK[LED0_STK_SIZE-1],
-                    (INT8U          )LED0_TASK_PRIO,            
-                    (INT16U         )LED0_TASK_PRIO,            
-                    (OS_STK*        )&LED0_TASK_STK[0],         
-                    (INT32U         )LED0_STK_SIZE,             
+                    (OS_STK*        )&MOTOR_TASK_STK[MOTOR_STK_SIZE-1],
+                    (INT8U          )MOTOR_TASK_PRIO,            
+                    (INT16U         )MOTOR_TASK_PRIO,            
+                    (OS_STK*        )&MOTOR_TASK_STK[0],         
+                    (INT32U         )MOTOR_STK_SIZE,             
                     (void*          )0,                         
                     (INT16U         )OS_TASK_OPT_STK_CHK|OS_TASK_OPT_STK_CLR|OS_TASK_OPT_SAVE_FP);
 	//LED1任务
-    OSTaskCreateExt((void(*)(void*) )led1_task,                 
+    OSTaskCreateExt((void(*)(void*) )remotectrl_task,                 
                     (void*          )0,
-                    (OS_STK*        )&LED1_TASK_STK[LED1_STK_SIZE-1],
-                    (INT8U          )LED1_TASK_PRIO,            
-                    (INT16U         )LED1_TASK_PRIO,            
-                    (OS_STK*        )&LED1_TASK_STK[0],         
-                    (INT32U         )LED1_STK_SIZE,             
+                    (OS_STK*        )&REMOTE_TASK_STK[REMOTE_STK_SIZE-1],
+                    (INT8U          )REMOTE_TASK_PRIO,            
+                    (INT16U         )REMOTE_TASK_PRIO,            
+                    (OS_STK*        )&REMOTE_TASK_STK[0],         
+                    (INT32U         )REMOTE_STK_SIZE,             
                     (void*          )0,                         
                     (INT16U         )OS_TASK_OPT_STK_CHK|OS_TASK_OPT_STK_CLR|OS_TASK_OPT_SAVE_FP);
 
@@ -96,26 +99,24 @@ void start_task(void *pdata)
 	OSTaskSuspend(START_TASK_PRIO); //挂起开始任务
 }
  
-//LED0任务
-void led0_task(void *pdata)
+//电机驱动任务
+void motordrive_task(void *pdata)
 {	 	
+	motordrive_init();
 	while(1)
 	{
-		LED0=0;
-		delay_ms(800);
-		LED0=1;
-		delay_ms(920);
+		motordrive_func();
+		OSTimeDly(20);
 	};
 }
 
-//LED1任务
-void led1_task(void *pdata)
+//遥控任务
+void remotectrl_task(void *pdata)
 {	  
+	remotectrl_init();
 	while(1)
 	{
-		LED1=0;
-		delay_ms(300);
-		LED1=1;
-		delay_ms(300);
+		//remotectrl_func();
+		OSTimeDly(300);
 	}
 }

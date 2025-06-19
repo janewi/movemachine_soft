@@ -64,6 +64,8 @@
 ..\obj\os_cpu_c.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h
 ..\obj\os_cpu_c.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h
 ..\obj\os_cpu_c.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
+..\obj\os_cpu_c.o: ..\SYSTEM\userApp\userApp.h
+..\obj\os_cpu_c.o: ..\SYSTEM\sys\sys.h
 ..\obj\os_cpu_c.o: ..\UCOSII\uC-LIB\lib_def.h
 ..\obj\os_cpu_c.o: ..\UCOSII\uC-CPU\cpu_def.h
 ..\obj\os_cpu_c.o: ..\UCOSII\uC-CPU\ARM-Cortex-M4\RealView\cpu.h

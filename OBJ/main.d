@@ -68,3 +68,4 @@
 ..\obj\main.o: ..\UCOSII\uCOS-II\Source\ucos_ii.h
 ..\obj\main.o: ..\UCOSII\uCOS-CONFIG\os_cfg.h
 ..\obj\main.o: ..\UCOSII\uCOS-II\Ports\ARM-Cortex-M4\Generic\RealView\os_cpu.h
+..\obj\main.o: ..\SYSTEM\userApp\userApp.h
