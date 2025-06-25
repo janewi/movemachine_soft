@@ -5,15 +5,25 @@
 #include "includes.h"
 #include "userApp.h" 
 #include "timer.h" 
+#include "drvL298N.h"
 
+#define COUNT_MID 1000
+
+//TIMER1用于编码器模式，TIMER2用于PWM输出
 void motordrive_init(void)
 {
-	TIM3_PWM_Init(500-1,72-1);
+	//TIM3_PWM_Init(500-1,72-1);
+	MX_TIM1_Init();
+  	MX_TIM2_Init();
+	DRVL298N_Init();
+	 HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+  	__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
 }
 
 
 void motordrive_func(void)
 {
+#if 0
 	static u8  dir = 1;
 	static u16 led0pwmval=0; 
 
@@ -21,7 +31,32 @@ void motordrive_func(void)
 	else led0pwmval--;					//dir==0 led0pwmval递减  
 	if(led0pwmval>300)dir=0;			//led0pwmval到达300后，方向为递减
 	if(led0pwmval==0)dir=1;				//led0pwmval递减到0后，方向改为递增
-	TIM_SetTIM3Compare2(led0pwmval);	//修改比较值，修改占空比
+	//TIM_SetTIM3Compare2(led0pwmval);	//修改比较值，修改占空比
+#endif
+
+	static int count = 0,speed = 0;
+	count = __HAL_TIM_GET_COUNTER(&htim1);
+
+	//最大值清零
+	/* if (count > COUNT_MID*2 || count == 0){
+		  count = 15000;
+		  __HAL_TIM_SET_COUNTER(&htim1, 0);
+	  }*/
+	speed++;
+	
+	 if (speed < COUNT_MID){
+		 // speed = 100;
+		  DRVL298N_Backward(100);//电机逆时针转动
+	  }
+	 else if(speed < COUNT_MID*2)
+	  {
+		 // speed = 100;
+		  DRVL298N_Forward(100);//电机顺时针转动
+	  }
+	 else
+	 	speed = 0;
+
+	printf("count:%d,spped:%d\r\n",count,speed);
 
 }
 

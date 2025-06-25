@@ -1,6 +1,10 @@
 ..\obj\timer.o: ..\HARDWARE\TIMER\timer.c
 ..\obj\timer.o: ..\HARDWARE\TIMER\timer.h
-..\obj\timer.o: ..\SYSTEM\sys\sys.h
+..\obj\timer.o: ..\USER\main.h
+..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
+..\obj\timer.o: ..\USER\stm32f1xx_hal_conf.h
+..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
+..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
 ..\obj\timer.o: ..\USER\stm32f1xx.h
 ..\obj\timer.o: ..\USER\stm32f103xe.h
 ..\obj\timer.o: ..\CORE\core_cm3.h
@@ -10,10 +14,6 @@
 ..\obj\timer.o: ..\CORE\core_cmFunc.h
 ..\obj\timer.o: ..\USER\system_stm32f1xx.h
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h
-..\obj\timer.o: ..\USER\stm32f1xx_hal_conf.h
-..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h
-..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_def.h
-..\obj\timer.o: ..\USER\stm32f1xx.h
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\Legacy/stm32_hal_legacy.h
 ..\obj\timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h
@@ -58,4 +58,3 @@
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h
 ..\obj\timer.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
-..\obj\timer.o: ..\HARDWARE\LED\led.h

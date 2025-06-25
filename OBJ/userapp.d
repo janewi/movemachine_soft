@@ -70,3 +70,5 @@
 ..\obj\userapp.o: ..\UCOSII\uCOS-II\Ports\ARM-Cortex-M4\Generic\RealView\os_cpu.h
 ..\obj\userapp.o: ..\SYSTEM\userApp\userApp.h
 ..\obj\userapp.o: ..\HARDWARE\TIMER\timer.h
+..\obj\userapp.o: ..\USER\main.h
+..\obj\userapp.o: ..\HARDWARE\L298N\drvL298N.h

@@ -4,7 +4,7 @@
  */
 
 #include "drvL298N.h"
-#include "tim.h"
+#include "timer.h"
 
 /** @brief IN1引脚的定时器 */
 #define IN1_TIM &htim2
@@ -12,9 +12,9 @@
 #define IN2_TIM &htim2
 
 /** @brief IN1引脚的定时器通道 */
-#define IN1_CH TIM_CHANNEL_1
+#define IN1_CH TIM_CHANNEL_2
 /** @brief IN2引脚的定时器通道 */
-#define IN2_CH TIM_CHANNEL_2
+#define IN2_CH TIM_CHANNEL_3
 
 /** @brief 最大速度值 */
 #define MAX_SPEED 100
@@ -27,7 +27,7 @@ static DecayMode currentDecayMode = SLOW_DECAY;
  * @brief 设置IN1引脚的PWM占空比
  * @param duty 占空比值
  */
-static inline void __SetIn1PWM(uint8_t duty)
+ void __SetIn1PWM(uint8_t duty)
 {
     __HAL_TIM_SET_COMPARE(IN1_TIM, IN1_CH, duty);
 }
@@ -36,7 +36,7 @@ static inline void __SetIn1PWM(uint8_t duty)
  * @brief 设置IN2引脚的PWM占空比
  * @param duty 占空比值
  */
-static inline void __SetIn2PWM(uint8_t duty)
+void __SetIn2PWM(uint8_t duty)
 {
     __HAL_TIM_SET_COMPARE(IN2_TIM, IN2_CH, duty);
 }

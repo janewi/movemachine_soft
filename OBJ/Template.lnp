@@ -22,6 +22,7 @@
 "..\obj\userapp.o"
 "..\obj\led.o"
 "..\obj\timer.o"
+"..\obj\drvl298n.o"
 "..\obj\bsp.o"
 "..\obj\cpu_bsp.o"
 "..\obj\cpu_c.o"

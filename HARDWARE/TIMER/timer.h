@@ -1,22 +1,57 @@
-#ifndef _TIMER_H
-#define _TIMER_H
-#include "sys.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK STM32F103开发板
-//定时器驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//创建日期:2017/5/25
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2014-2024
-//All rights reserved									  
-////////////////////////////////////////////////////////////////////////////////// 	
-extern TIM_HandleTypeDef TIM3_Handler;      //定时器句柄 
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    tim.h
+  * @brief   This file contains all the function prototypes for
+  *          the tim.c file
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2025 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __TIM_H__
+#define __TIM_H__
 
-void TIM3_Init(u16 arr,u16 psc);
-void TIM3_PWM_Init(u16 arr,u16 psc);
-void TIM_SetTIM3Compare2(u32 compare);
+#ifdef __cplusplus
+extern "C" {
 #endif
+
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+extern TIM_HandleTypeDef htim1;
+
+extern TIM_HandleTypeDef htim2;
+
+/* USER CODE BEGIN Private defines */
+
+/* USER CODE END Private defines */
+
+void MX_TIM1_Init(void);
+void MX_TIM2_Init(void);
+
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
+
+/* USER CODE BEGIN Prototypes */
+
+/* USER CODE END Prototypes */
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __TIM_H__ */
 
