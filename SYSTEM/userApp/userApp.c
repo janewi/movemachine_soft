@@ -13,11 +13,31 @@
 void motordrive_init(void)
 {
 	//TIM3_PWM_Init(500-1,72-1);
-	MX_TIM1_Init();
-  	MX_TIM2_Init();
 	DRVL298N_Init();
-	 HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-  	__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
+
+	//time1pwm_Init();
+	//升降功能
+	//第一个电机的编码器
+	// HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+  	//__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
+#if 0
+	//第二个电机的编码器
+	 HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+  	__HAL_TIM_SET_COUNTER(&htim3, COUNT_MID);
+
+	//开合功能
+	//第一个电机的编码器
+	 HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+	__HAL_TIM_SET_COUNTER(&htim4, COUNT_MID);
+
+	//第二个电机的编码器
+	 HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
+	__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
+	#endif
+	
+	//第二个电机的编码器
+	// HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
+	//__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
 }
 
 
@@ -35,26 +55,47 @@ void motordrive_func(void)
 #endif
 
 	static int count = 0,speed = 0;
-	count = __HAL_TIM_GET_COUNTER(&htim1);
 
+
+	//count = __HAL_TIM_GET_COUNTER(&htim1);//1---升降左边电机
+
+	//count = __HAL_TIM_GET_COUNTER(&htim3);//2---升降右边电机
+
+	//count = __HAL_TIM_GET_COUNTER(&htim4);//3---开合左边电机
+	count = __HAL_TIM_GET_COUNTER(&htim8);//4---开合右边电机
+	
 	//最大值清零
 	/* if (count > COUNT_MID*2 || count == 0){
 		  count = 15000;
 		  __HAL_TIM_SET_COUNTER(&htim1, 0);
 	  }*/
+	  #if 1
 	speed++;
 	
-	 if (speed < COUNT_MID){
-		 // speed = 100;
-		  DRVL298N_Backward(100);//电机逆时针转动
+	 if (speed == COUNT_MID){
+
+		  //DRVL298N_Backward(LEFTDIR,100,SJMOTOR);//1---左边电机逆时针转动
+
+		  //DRVL298N_Backward(RIGHTDIR,100,SJMOTOR);//2---右边电机逆时针转动
+
+		   DRVL298N_Backward(LEFTDIR,100,KHMOTOR);//3---左边开合电机逆时针转动
+		  // DRVL298N_Backward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机逆时针转动
 	  }
-	 else if(speed < COUNT_MID*2)
+	 else if(speed == COUNT_MID*2)
 	  {
-		 // speed = 100;
-		  DRVL298N_Forward(100);//电机顺时针转动
+
+		  //DRVL298N_Forward(LEFTDIR,100,SJMOTOR);//1---电机顺时针转动
+
+		  //DRVL298N_Forward(RIGHTDIR,100,SJMOTOR);//2---电机顺时针转动
+		  
+		  DRVL298N_Forward(LEFTDIR,100,KHMOTOR);//3---左边开合电机顺时针转动
+		
+		 //DRVL298N_Forward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机顺时针转动
 	  }
-	 else
+	 else if(speed > COUNT_MID*2+2)
 	 	speed = 0;
+
+	 #endif
 
 	printf("count:%d,spped:%d\r\n",count,speed);
 

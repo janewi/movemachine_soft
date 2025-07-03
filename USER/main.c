@@ -28,7 +28,7 @@ void start_task(void *pdata);
 //设置任务优先级
 #define MOTOR_TASK_PRIO			7
 //设置任务堆栈大小
-#define MOTOR_STK_SIZE			128
+#define MOTOR_STK_SIZE			512
 //任务堆栈
 OS_STK MOTOR_TASK_STK[MOTOR_STK_SIZE];
 //任务函数
