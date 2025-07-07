@@ -12,32 +12,17 @@
 //TIMER1用于编码器模式，TIMER2用于PWM输出
 void motordrive_init(void)
 {
-	//TIM3_PWM_Init(500-1,72-1);
 	DRVL298N_Init();
 
 	//time1pwm_Init();
 	//升降功能
 	//第一个电机的编码器
-	// HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-  	//__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
-#if 0
-	//第二个电机的编码器
-	 HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  	__HAL_TIM_SET_COUNTER(&htim3, COUNT_MID);
-
-	//开合功能
-	//第一个电机的编码器
-	 HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
-	__HAL_TIM_SET_COUNTER(&htim4, COUNT_MID);
+	 HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
+  	__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
 
 	//第二个电机的编码器
 	 HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
 	__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
-	#endif
-	
-	//第二个电机的编码器
-	// HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
-	//__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
 }
 
 
@@ -59,10 +44,7 @@ void motordrive_func(void)
 
 	//count = __HAL_TIM_GET_COUNTER(&htim1);//1---升降左边电机
 
-	//count = __HAL_TIM_GET_COUNTER(&htim3);//2---升降右边电机
-
-	//count = __HAL_TIM_GET_COUNTER(&htim4);//3---开合左边电机
-	count = __HAL_TIM_GET_COUNTER(&htim8);//4---开合右边电机
+	//count = __HAL_TIM_GET_COUNTER(&htim8);//4---升降右边电机
 	
 	//最大值清零
 	/* if (count > COUNT_MID*2 || count == 0){
@@ -73,24 +55,30 @@ void motordrive_func(void)
 	speed++;
 	
 	 if (speed == COUNT_MID){
+		 
+		 //DRVL298N_Backward(RIGHTDIR,100,SJMOTOR);//2---右边电机逆时针转动
 
-		  //DRVL298N_Backward(LEFTDIR,100,SJMOTOR);//1---左边电机逆时针转动
+		 // DRVL298N_Backward(LEFTDIR,100,SJMOTOR);//1---左边电机逆时针转动
 
-		  //DRVL298N_Backward(RIGHTDIR,100,SJMOTOR);//2---右边电机逆时针转动
+		 //DRVL298N_Backward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机逆时针转动
 
-		   DRVL298N_Backward(LEFTDIR,100,KHMOTOR);//3---左边开合电机逆时针转动
-		  // DRVL298N_Backward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机逆时针转动
+		 //DRVL298N_Backward(LEFTDIR,100,KHMOTOR);//3---左边开合电机逆时针转动
+
+		 DRVL298N_Backward(RIGHTDIR,100,TJMOTOR);//5---托举逆时针
+		 
 	  }
 	 else if(speed == COUNT_MID*2)
 	  {
+		 //DRVL298N_Forward(RIGHTDIR,100,SJMOTOR);//2---电机顺时针转动
+				  
 
 		  //DRVL298N_Forward(LEFTDIR,100,SJMOTOR);//1---电机顺时针转动
 
-		  //DRVL298N_Forward(RIGHTDIR,100,SJMOTOR);//2---电机顺时针转动
-		  
-		  DRVL298N_Forward(LEFTDIR,100,KHMOTOR);//3---左边开合电机顺时针转动
-		
 		 //DRVL298N_Forward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机顺时针转动
+
+		 //DRVL298N_Forward(LEFTDIR,100,KHMOTOR);//3---左边开合电机顺时针转动
+
+		 DRVL298N_Forward(RIGHTDIR,100,TJMOTOR);//5---托举顺时针
 	  }
 	 else if(speed > COUNT_MID*2+2)
 	 	speed = 0;
