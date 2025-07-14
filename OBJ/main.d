@@ -69,3 +69,5 @@
 ..\obj\main.o: ..\UCOSII\uCOS-CONFIG\os_cfg.h
 ..\obj\main.o: ..\UCOSII\uCOS-II\Ports\ARM-Cortex-M4\Generic\RealView\os_cpu.h
 ..\obj\main.o: ..\SYSTEM\userApp\userApp.h
+..\obj\main.o: ..\HARDWARE\GPIO\gpio.h
+..\obj\main.o: ..\USER\main.h

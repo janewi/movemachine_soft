@@ -21,13 +21,15 @@ typedef struct {
     int speed;          // 当前速度(PWM值或步进脉冲频率)
     float integral;     // PID积分项(用于消除稳态误差)
     long lastError;     // 上一次误差(用于计算微分项)
+    u8 direct;//方向
 } Motor;
 
 //定义PID的值，需要调试配置
 
-#define KP 1
-#define KI	1
-#define	KD	1
+#define KP_F 	1.5//顺时针转
+#define KP_B	1.2//逆时针转
+#define KI	0.05
+#define	KD	0
 
 typedef enum  {
 	FORWARD =0,  //正转,顺时针
@@ -35,7 +37,12 @@ typedef enum  {
 }motoroperate;
 
 
-#define	SYNC_THRESHOLD	5
+#define	SYNC_THRESHOLD	4
+
+
+long readEncoder(u8 isLeft,u8 index);
+void setMotorSpeed(u8 motoroperate,u8 motordir,int speed,u8 index);
+
 
 #endif
 

@@ -3,6 +3,7 @@
 #include "usart.h"
 #include "led.h"
 #include "includes.h"
+#include "gpio.h"
 
 /************************************************
  ALIENTEK 战舰STM32F103开发板 实验51
@@ -51,6 +52,7 @@ int main(void)
 	delay_init(72);               		//初始化延时函数
 	LED_Init();							//初始化LED	
 	uart_init(115200);					//初始化串口
+	MX_GPIO_Init();
 
 	printf("uart init ok\r\n");
 	OSInit();                       	//UCOS初始化

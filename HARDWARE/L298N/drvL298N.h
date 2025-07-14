@@ -4,6 +4,9 @@
 
 #include <stdint.h>
 #include "Sys.h"
+
+/** @brief 最大速度值*/
+#define MAX_SPEED 100
 /**
  * @brief 衰减模式枚举
  */

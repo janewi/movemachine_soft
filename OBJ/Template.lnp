@@ -23,6 +23,7 @@
 "..\obj\led.o"
 "..\obj\timer.o"
 "..\obj\drvl298n.o"
+"..\obj\gpio.o"
 "..\obj\bsp.o"
 "..\obj\cpu_bsp.o"
 "..\obj\cpu_c.o"
@@ -46,6 +47,7 @@
 "..\obj\os_cpu_c.o"
 "..\obj\os_cpu_a.o"
 "..\obj\app_hooks.o"
+"..\obj\syncmotor.o"
 --strict --scatter "..\OBJ\Template.sct"
 --summary_stderr --info summarysizes --map --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

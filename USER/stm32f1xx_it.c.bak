@@ -40,8 +40,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f1xx_it.h"
-#include "timer.h"
-
+   
 /** @addtogroup STM32F1xx_HAL_Examples
   * @{
   */
@@ -166,7 +165,7 @@ void DebugMon_Handler(void)
 /*  available peripheral interrupt handler's name please refer to the startup */
 /*  file (startup_stm32f1xx.s).                                               */
 /******************************************************************************/
-extern int g_encoder_count2;
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
@@ -177,13 +176,12 @@ extern int g_encoder_count2;
 }*/
 
 
-
 /**
   * @}
   */ 
 
 /**
-  * @brief This function handles TIM6 global interrupt.
+  * @}
   */
 void TIM6_IRQHandler(void)
 {

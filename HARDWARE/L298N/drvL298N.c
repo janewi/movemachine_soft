@@ -64,8 +64,7 @@
 #define TJIN2_CH TIM_CHANNEL_4
 
 
-/** @brief 最大速度值 */
-#define MAX_SPEED 100
+
 
 
 /** @brief 当前衰减模式 */
@@ -187,6 +186,7 @@ void DRVL298N_Init(void)
 
 	MX_TIM3_Init();
 	MX_TIM4_Init();
+	MX_TIM6_Init();
 	MX_TIM8_Init();
 
 

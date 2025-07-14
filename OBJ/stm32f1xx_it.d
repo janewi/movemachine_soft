@@ -58,3 +58,4 @@
 ..\obj\stm32f1xx_it.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h
 ..\obj\stm32f1xx_it.o: ..\HALLIB\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_hcd.h
 ..\obj\stm32f1xx_it.o: stm32f1xx_it.h
+..\obj\stm32f1xx_it.o: ..\HARDWARE\TIMER\timer.h

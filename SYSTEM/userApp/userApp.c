@@ -6,6 +6,7 @@
 #include "userApp.h" 
 #include "timer.h" 
 #include "drvL298N.h"
+#include "Syncmotor.h"	
 
 #define COUNT_MID 1000
 
@@ -23,6 +24,9 @@ void motordrive_init(void)
 	//第二个电机的编码器
 	 HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
 	__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
+
+	//清空编码器值
+	__HAL_TIM_SET_COUNTER(&htim8, 0);
 }
 
 
@@ -37,15 +41,23 @@ void motordrive_func(void)
 	if(led0pwmval>300)dir=0;			//led0pwmval到达300后，方向为递减
 	if(led0pwmval==0)dir=1;				//led0pwmval递减到0后，方向改为递增
 	//TIM_SetTIM3Compare2(led0pwmval);	//修改比较值，修改占空比
+
+
 #endif
+SYNCMotor();
+
+#if 0
 
 	static int count = 0,speed = 0;
 
-
+	static int count_old = 0;
+		float speedrpm = 0;
+		float angledeg = 0;
 	//count = __HAL_TIM_GET_COUNTER(&htim1);//1---升降左边电机
 
-	//count = __HAL_TIM_GET_COUNTER(&htim8);//4---升降右边电机
+	count = __HAL_TIM_GET_COUNTER(&htim8);//4---升降右边电机
 	
+
 	//最大值清零
 	/* if (count > COUNT_MID*2 || count == 0){
 		  count = 15000;
@@ -58,13 +70,13 @@ void motordrive_func(void)
 		 
 		 //DRVL298N_Backward(RIGHTDIR,100,SJMOTOR);//2---右边电机逆时针转动
 
-		 // DRVL298N_Backward(LEFTDIR,100,SJMOTOR);//1---左边电机逆时针转动
+		  DRVL298N_Backward(LEFTDIR,100,SJMOTOR);//1---左边电机逆时针转动
 
 		 //DRVL298N_Backward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机逆时针转动
 
-		 //DRVL298N_Backward(LEFTDIR,100,KHMOTOR);//3---左边开合电机逆时针转动
+		 //DRVL298N_Backward(LEFTDIR,50,KHMOTOR);//3---左边开合电机逆时针转动
 
-		 DRVL298N_Backward(RIGHTDIR,100,TJMOTOR);//5---托举逆时针
+		 //DRVL298N_Backward(RIGHTDIR,100,TJMOTOR);//5---托举逆时针
 		 
 	  }
 	 else if(speed == COUNT_MID*2)
@@ -72,21 +84,22 @@ void motordrive_func(void)
 		 //DRVL298N_Forward(RIGHTDIR,100,SJMOTOR);//2---电机顺时针转动
 				  
 
-		  //DRVL298N_Forward(LEFTDIR,100,SJMOTOR);//1---电机顺时针转动
+		  DRVL298N_Forward(LEFTDIR,100,SJMOTOR);//1---电机顺时针转动
 
 		 //DRVL298N_Forward(RIGHTDIR,100,KHMOTOR);//4---右边开合电机顺时针转动
 
-		 //DRVL298N_Forward(LEFTDIR,100,KHMOTOR);//3---左边开合电机顺时针转动
+		// DRVL298N_Forward(LEFTDIR,50,KHMOTOR);//3---左边开合电机顺时针转动
 
-		 DRVL298N_Forward(RIGHTDIR,100,TJMOTOR);//5---托举顺时针
+		// DRVL298N_Forward(RIGHTDIR,100,TJMOTOR);//5---托举顺时针
 	  }
 	 else if(speed > COUNT_MID*2+2)
 	 	speed = 0;
 
 	 #endif
 
-	printf("count:%d,spped:%d\r\n",count,speed);
+	printf("count:%d,spped:%d,rpm:%f,angle:%f\r\n",count,speed,speedrpm,angledeg);
 
+#endif
 }
 
 void remotectrl_init(void)
