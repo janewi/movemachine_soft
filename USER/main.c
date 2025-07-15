@@ -108,7 +108,7 @@ void motordrive_task(void *pdata)
 	while(1)
 	{
 		motordrive_func();
-		OSTimeDly(20);
+		OSTimeDly(50);
 	};
 }
 
@@ -118,7 +118,7 @@ void remotectrl_task(void *pdata)
 	remotectrl_init();
 	while(1)
 	{
-		//remotectrl_func();
-		OSTimeDly(300);
+		remotectrl_func();
+		OSTimeDly(20);
 	}
 }

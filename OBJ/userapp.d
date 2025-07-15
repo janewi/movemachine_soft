@@ -73,3 +73,4 @@
 ..\obj\userapp.o: ..\USER\main.h
 ..\obj\userapp.o: ..\HARDWARE\L298N\drvL298N.h
 ..\obj\userapp.o: ..\AppModule\syncmotor\Syncmotor.h
+..\obj\userapp.o: ..\AppModule\Filter\filter.h

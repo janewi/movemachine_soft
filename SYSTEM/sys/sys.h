@@ -48,7 +48,15 @@ typedef __IO uint8_t  vu8;
 
 typedef __I uint32_t vuc32;  
 typedef __I uint16_t vuc16; 
-typedef __I uint8_t vuc8;  																    
+typedef __I uint8_t vuc8;  				
+
+//BOOL类型
+typedef enum
+{
+FALSE =0,
+TRUE =1
+} bool,BOOL;
+
 	 
 //位带操作,实现51类似的GPIO控制功能
 //具体实现思想,参考<<CM3权威指南>>第五章(87页~92页).

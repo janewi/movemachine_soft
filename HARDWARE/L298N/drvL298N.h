@@ -20,6 +20,7 @@ typedef enum {
 	SJMOTOR=0,
 	KHMOTOR,
 	TJMOTOR,
+	NULLMOTOR,
 }MOTORIndex;
 
 typedef enum  {

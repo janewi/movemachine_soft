@@ -7,26 +7,17 @@
 #include "timer.h" 
 #include "drvL298N.h"
 #include "Syncmotor.h"	
+#include "filter.h"
 
 #define COUNT_MID 1000
+
+FilterItem_T yk_KEYFilter[KEYNUM];
+
 
 //TIMER1用于编码器模式，TIMER2用于PWM输出
 void motordrive_init(void)
 {
 	DRVL298N_Init();
-
-	//time1pwm_Init();
-	//升降功能
-	//第一个电机的编码器
-	 HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);
-  	__HAL_TIM_SET_COUNTER(&htim1, COUNT_MID);
-
-	//第二个电机的编码器
-	 HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);
-	__HAL_TIM_SET_COUNTER(&htim8, COUNT_MID);
-
-	//清空编码器值
-	__HAL_TIM_SET_COUNTER(&htim8, 0);
 }
 
 
@@ -44,7 +35,7 @@ void motordrive_func(void)
 
 
 #endif
-SYNCMotor();
+//SYNCMotor();
 
 #if 0
 
@@ -104,22 +95,86 @@ SYNCMotor();
 
 void remotectrl_init(void)
 {
-	
+	//按键过滤器初始化
+	//Filter_Init(&yk_KEYFilter[0],KEYNUM,TRUE,FALSE,KEYFILTER,0);
+	int i = 0;
+	for(i = 0;i<KEYNUM;i++){
+		yk_KEYFilter[i].IsCountFilter = TRUE;
+		yk_KEYFilter[i].CountFilterThread = KEYFILTER;
+		ResetFilterCount(&yk_KEYFilter[i]);
+	}
 }
 
+bool GetKeyValue(u8 index)
+{
+	bool retvalue = FALSE;
+	switch(index)
+	{
+		case KEY1:
+			retvalue = GetKEYQ1();
+			break;
+		case KEY2:
+			retvalue = GetKEYQ2();
+			break;
+		case KEY3:
+			retvalue = GetKEYQ3();
+			break;
+		case KEY4:
+			retvalue = GetKEYQ4();
+			break;
+		case KEY5:
+			retvalue = GetKEYQ5();
+			break;
+		case KEY6:
+			retvalue = GetKEYQ6();
+			break;
+		case VTKEY:
+			retvalue = GetKEYVT();
+			break;
+		default:
+			break;
+	}
+	return retvalue;
+}
 void remotectrl_func(void)
 {
-	static unsigned char  ledst = 0;
-
-	if(ledst == 0)
-	{
-		LED1=0;
-		ledst = 1;
-	}
-	else
-	{
-		LED1=1;
-		ledst = 0;
+	//6个按键脚和1个信号脚
+	//需要去抖，连续检测到大于2次，才认为信号有效
+	int i = 0;
+	for(i=0;i<KEYNUM;i++){
+		if(ChkFilter(&yk_KEYFilter[i], 0, GetKeyValue(i)) && GetKeyValue(VTKEY)){
+			//满足按键按下的条件，执行对应的控制命令
+			switch(i)
+			{
+				case KEY1:
+					//升
+					printf("升\r\n");
+					break;
+				case KEY2:
+					//降
+					printf("降\r\n");
+					break;
+				case KEY3:
+					//开
+					printf("开\r\n");
+					break;
+				case KEY4:
+					//合
+					printf("合\r\n");
+					break;
+				case KEY5:
+					//托举升
+					printf("托举升\r\n");
+					break;
+				case KEY6:
+					//托举降低
+					printf("托举降低\r\n");
+					break;
+				default:
+					break;
+			}
+			
+		}
 	}
 }
 

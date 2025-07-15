@@ -29,6 +29,22 @@ int g_encoder_count4 = 0x00;//SJ编码器数值
 #define GPIOBASE2_2	GPIOE
 #define	GPIOPORT2_2	GPIO_PIN_3
 
+/** @brief 升降的编码器端口 */
+#define GPIOBASE3_1	GPIOE
+#define	GPIOPORT3_1	GPIO_PIN_9
+/** @brief 开合的编码器端口*/
+#define GPIOBASE3_2	GPIOE
+#define	GPIOPORT3_2	GPIO_PIN_11
+
+
+/** @brief 开合的编码器端口 ，第二路*/
+#define GPIOBASE4_1	GPIOC
+#define	GPIOPORT4_1	GPIO_PIN_6
+
+#define GPIOBASE4_2	GPIOC
+#define	GPIOPORT4_2	GPIO_PIN_7
+
+
 ////在tim6 1ms定时器中读取编码器的值
 
 
@@ -39,6 +55,7 @@ Motor leftMotor,rightMotor;//左右开合电机
 
 Motor SJleftMotor,SJrightMotor;//左右升降电机
 
+u8 g_motorType = NULLMOTOR;
 
 //初始化两个电机的所有状态变量为0，确保系统从一个已知的确定状态开始运行。
 void initMotors() {
@@ -126,16 +143,12 @@ int calculatePID(Motor *motor, long error) {
 
 long readEncoder(u8 isLeft,u8 index)
 {
-	long tim1count=0;
-	long tim8count = 0;
-	static long tim1count_old = 0;
-	static long tim8count_old = 0;
+
 	if(isLeft == RIGHTDIR)
 	{
 		if(index == SJMOTOR)
 		{
-			 __HAL_TIM_GET_COUNTER(&htim1);//接右边 PE9 PE11
-			 return g_encoder_count3;
+			return g_encoder_count3;
 
 		}
 		else
@@ -144,11 +157,6 @@ long readEncoder(u8 isLeft,u8 index)
 	else if(isLeft == LEFTDIR)
 	{
 		if(index == SJMOTOR){
-			tim8count =__HAL_TIM_GET_COUNTER(&htim8);//接左边 PC6 PC7
-			
-			g_encoder_count4+=(tim8count-tim8count_old);
-			
-			tim8count_old = tim8count;
 			
 			return g_encoder_count4;
 		}
@@ -210,8 +218,8 @@ void syncMotors(u8 motortype) {
 	}
 	else if(motortype == SJMOTOR){
 		// 1. 读取实际位置(闭环反馈)
-		SJleftMotor.position = readEncoder(LEFTDIR,SJMOTOR);
-    	SJrightMotor.position = readEncoder(LEFTDIR,SJMOTOR);//测试
+		SJleftMotor.position = readEncoder(RIGHTDIR,SJMOTOR);
+    	SJrightMotor.position = readEncoder(RIGHTDIR,SJMOTOR);//测试
     	// 2. 计算平均目标(使两个电机向中间靠拢)
     	SJavgTarget = (SJleftMotor.target + SJrightMotor.target) / 2;
 		 // 3. 计算位置偏差
@@ -233,13 +241,13 @@ void syncMotors(u8 motortype) {
 
 		 // 模拟电机运动(实际硬件中替换为PWM输出)
 		if(	SJleftMotor.direct == BACKWARD){
-	   		setMotorSpeed(BACKWARD,LEFTDIR,SJleftMotor.speed,SJMOTOR); 
+	   		setMotorSpeed(BACKWARD,RIGHTDIR,SJleftMotor.speed,SJMOTOR); 
 			SJleftMotor.position -= SJleftMotor.speed / 10;
 	    	SJrightMotor.position -= SJrightMotor.speed / 10;
 
 		}
 		else{
-			setMotorSpeed(FORWARD,LEFTDIR,SJleftMotor.speed,SJMOTOR);
+			setMotorSpeed(FORWARD,RIGHTDIR,SJleftMotor.speed,SJMOTOR);
 			SJleftMotor.position += SJleftMotor.speed / 10;
 	    	SJrightMotor.position += SJrightMotor.speed / 10;
 		}
@@ -266,8 +274,9 @@ leftMotor.direct = BACKWARD;
 leftMotor.target = -5000;
 rightMotor.target = -5000;
 
+//升降和开合都完成了
 */
-int SYNCMotor() {
+int SYNCMotor(void) {
 	//int i = 0;
     initMotors();
 	
@@ -287,7 +296,8 @@ int SYNCMotor() {
         syncMotors();
 	}
 	#else
-		syncMotors(SJMOTOR);
+		g_motorType = SJMOTOR;
+		syncMotors(g_motorType);
     #endif
 	
     return 0;
@@ -375,14 +385,24 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim)
 {
 	//static u8 st_cnt = 0;
 	static u8 st_encoder_status1=0,st_encoder_status2 =0;
+	static u8 st_encoder_status3=0,st_encoder_status4 =0;
 	static u8 st_zhenzhuan1=0,st_zhenzhuan2 =0;
 	static u8 st_fanzhuan1=0,st_fanzhuan2 =0;
+
+	static u8 st_zhenzhuan3=0,st_zhenzhuan4 =0;
+	static u8 st_fanzhuan3=0,st_fanzhuan4 =0;
+	
 	
 	if(htim->Instance == TIM6)
 	{
-		st_encoder_status1 = GetEncodeValue(st_encoder_status1,GPIOBASE1_1,GPIOPORT1_1,GPIOBASE1_2,GPIOPORT1_2,&g_encoder_count1,&st_zhenzhuan1,&st_fanzhuan1);
-		st_encoder_status2 = GetEncodeValue(st_encoder_status2,GPIOBASE2_1,GPIOPORT2_1,GPIOBASE2_2,GPIOPORT2_2,&g_encoder_count2,&st_zhenzhuan2,&st_fanzhuan2);
-		
+		if(g_motorType == KHMOTOR){
+			st_encoder_status1 = GetEncodeValue(st_encoder_status1,GPIOBASE1_1,GPIOPORT1_1,GPIOBASE1_2,GPIOPORT1_2,&g_encoder_count1,&st_zhenzhuan1,&st_fanzhuan1);
+			st_encoder_status2 = GetEncodeValue(st_encoder_status2,GPIOBASE2_1,GPIOPORT2_1,GPIOBASE2_2,GPIOPORT2_2,&g_encoder_count2,&st_zhenzhuan2,&st_fanzhuan2);
+		}
+		else if(g_motorType == SJMOTOR){
+			st_encoder_status3 = GetEncodeValue(st_encoder_status3,GPIOBASE3_1,GPIOPORT3_1,GPIOBASE3_2,GPIOPORT3_2,&g_encoder_count3,&st_zhenzhuan3,&st_fanzhuan3);
+			st_encoder_status4 = GetEncodeValue(st_encoder_status4,GPIOBASE4_1,GPIOPORT4_1,GPIOBASE4_2,GPIOPORT4_2,&g_encoder_count4,&st_zhenzhuan4,&st_fanzhuan4);
+		}
 	}
 }
 

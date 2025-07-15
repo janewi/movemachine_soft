@@ -43,6 +43,8 @@ typedef enum  {
 long readEncoder(u8 isLeft,u8 index);
 void setMotorSpeed(u8 motoroperate,u8 motordir,int speed,u8 index);
 
+void syncMotors(u8 motortype);
+int SYNCMotor(void);
 
 #endif
 
